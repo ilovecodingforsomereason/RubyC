@@ -1,0 +1,3 @@
+*.o
+rubyc
+level.dat
