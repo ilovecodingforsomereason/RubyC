@@ -1,5 +1,6 @@
+# 1 "level/level_renderer.h"
 #ifndef LEVEL_RENDERER_H
-#define LEVEL_RENDERER_H
+#define LEVEL_RENDERER_H 
 
 #include "level.h"
 #include "chunk.h"

@@ -1,9 +1,11 @@
+# 1 "ruby_dung.c"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "timer.h"
 #include "player.h"
@@ -30,12 +32,12 @@ static HitResult* g_hit_result = NULL;
 static double g_last_mouse_x = 0, g_last_mouse_y = 0;
 
 static GLuint g_select_buffer[2000];
+static int g_selected_block_type = 1;
 
 void init_game(GLFWwindow* window) {
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);
-    
-    
+
     glClearColor(0.5f, 0.8f, 1.0f, 1.0f);
     glClearDepth(1.0);
     glEnable(GL_DEPTH_TEST);
@@ -44,9 +46,15 @@ void init_game(GLFWwindow* window) {
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
+    remove("level.dat");
+
     g_level = level_create(256, 256, 64);
     g_level_renderer = level_renderer_create(g_level);
     player_init(&g_player, g_level);
+
+    g_player.x = 128.0f;
+    g_player.z = 128.0f;
+    g_player.y = 45.0f;
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwGetCursorPos(window, &g_last_mouse_x, &g_last_mouse_y);
@@ -87,10 +95,10 @@ void setup_pick_camera(float a, int x, int y) {
 void pick(float a) {
     glSelectBuffer(2000, g_select_buffer);
     glRenderMode(GL_SELECT);
-    
+
     setup_pick_camera(a, g_width / 2, g_height / 2);
     level_renderer_pick(g_level_renderer, &g_player);
-    
+
     GLint hits = glRenderMode(GL_RENDER);
     if (g_hit_result) { free(g_hit_result); g_hit_result = NULL; }
 
@@ -103,8 +111,8 @@ void pick(float a) {
         for (int i = 0; i < hits; i++) {
             GLuint names_count = *ptr++;
             GLuint min_z = *ptr++;
-            ptr++; 
-            
+            ptr++;
+
             if (min_z < closest_min_z || i == 0) {
                 closest_min_z = min_z;
                 closest_count = names_count;
@@ -127,10 +135,10 @@ void pick(float a) {
 void handle_mouse_clicks(int button, int action) {
     if (action != GLFW_PRESS || !g_hit_result) return;
 
-    if (button == GLFW_MOUSE_BUTTON_RIGHT) { 
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
         level_set_tile(g_level, g_hit_result->x, g_hit_result->y, g_hit_result->z, 0);
-    } 
-    else if (button == GLFW_MOUSE_BUTTON_LEFT) { 
+    }
+    else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
         int x = g_hit_result->x;
         int y = g_hit_result->y;
         int z = g_hit_result->z;
@@ -142,18 +150,16 @@ void handle_mouse_clicks(int button, int action) {
         if (g_hit_result->f == 4) x--;
         if (g_hit_result->f == 5) x++;
 
-        level_set_tile(g_level, x, y, z, 1);
+        level_set_tile(g_level, x, y, z, g_selected_block_type);
     }
 }
 
 void render(float a) {
-    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     setup_camera(a);
 
     glEnable(GL_CULL_FACE);
-    
-    
+
     level_renderer_render(g_level_renderer, &g_player, 0);
     level_renderer_render(g_level_renderer, &g_player, 1);
     glEnable(GL_TEXTURE_2D);
@@ -164,6 +170,7 @@ void render(float a) {
 }
 
 int main(void) {
+    srand((unsigned int)time(NULL));
     if (!glfwInit()) return -1;
 
     GLFWwindow* window = glfwCreateWindow(1024, 768, "RubyC - rd-132211 Port", NULL, NULL);
@@ -179,13 +186,17 @@ int main(void) {
     while (!glfwWindowShouldClose(window)) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) g_selected_block_type = 1;
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) g_selected_block_type = 2;
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) g_selected_block_type = 3;
+
         double mx, my;
         glfwGetCursorPos(window, &mx, &my);
-        
+
         float dx = (float)(mx - g_last_mouse_x);
         float dy = (float)(my - g_last_mouse_y);
         player_turn(&g_player, dx, -dy);
-        
+
         g_last_mouse_x = mx; g_last_mouse_y = my;
 
         timer_advance_time(&g_timer);
@@ -218,7 +229,6 @@ int main(void) {
         glfwPollEvents();
     }
 
-    if (g_level) level_save(g_level);
     glfwTerminate();
     return 0;
 }

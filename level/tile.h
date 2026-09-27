@@ -1,5 +1,6 @@
+# 1 "level/tile.h"
 #ifndef TILE_H
-#define TILE_H
+#define TILE_H 
 
 #include "tesselator.h"
 
@@ -11,6 +12,7 @@ typedef struct {
 
 extern Tile tile_rock;
 extern Tile tile_grass;
+extern Tile tile_dirt;
 
 void tile_render(Tile* tile, Tesselator* t, Level* level, int layer, int x, int y, int z);
 void tile_render_face(Tile* tile, Tesselator* t, int x, int y, int z, int face);

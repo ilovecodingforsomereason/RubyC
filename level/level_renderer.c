@@ -1,3 +1,4 @@
+# 1 "level/level_renderer.c"
 #include "level_renderer.h"
 #include "frustum.h"
 #include "tile.h"
@@ -31,7 +32,7 @@ LevelRenderer* level_renderer_create(Level* level) {
             for (int z = 0; z < lr->z_chunks; z++) {
                 int x0 = x * 16; int y0 = y * 16; int z0 = z * 16;
                 int x1 = (x + 1) * 16; int y1 = (y + 1) * 16; int z1 = (z + 1) * 16;
-                
+
                 if (x1 > level->width) x1 = level->width;
                 if (y1 > level->depth) y1 = level->depth;
                 if (z1 > level->height) z1 = level->height;
@@ -105,12 +106,12 @@ void level_renderer_render(LevelRenderer* lr, Player* player, int layer) {
 void level_renderer_render_hit(LevelRenderer* lr, HitResult* h) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    
+
     static float s_ticks = 0.0f; s_ticks += 0.05f;
     glColor4f(1.0f, 1.0f, 1.0f, (float)sin(s_ticks) * 0.15f + 0.35f);
-    
-    
-    
+
+
+
     glPushMatrix();
     float offset = 0.002f;
     if (h->f == 0) glTranslatef(0.0f, -offset, 0.0f);
@@ -123,7 +124,7 @@ void level_renderer_render_hit(LevelRenderer* lr, HitResult* h) {
     tesselator_init(&lr->t);
     tile_render_face(&tile_rock, &lr->t, h->x, h->y, h->z, h->f);
     tesselator_flush(&lr->t);
-    
+
     glPopMatrix();
     glDisable(GL_BLEND);
 }

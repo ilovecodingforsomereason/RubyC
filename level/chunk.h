@@ -1,5 +1,6 @@
+# 1 "level/chunk.h"
 #ifndef CHUNK_H
-#define CHUNK_H
+#define CHUNK_H 
 
 #include "../phys/aabb.h"
 #include <GL/gl.h>

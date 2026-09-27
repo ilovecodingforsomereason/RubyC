@@ -1,3 +1,4 @@
+# 1 "timer.c"
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 199309L
 #endif
@@ -35,9 +36,9 @@ void timer_advance_time(Timer* timer) {
 
     timer->passed_time += (float)passed_ns * timer->time_scale * timer->ticks_per_second / 1000000000.0f;
     timer->ticks = (int)timer->passed_time;
-    
+
     if (timer->ticks > 100) timer->ticks = 100;
-    
+
     timer->passed_time -= timer->ticks;
     timer->a = timer->passed_time;
 }

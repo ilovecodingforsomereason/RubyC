@@ -1,5 +1,6 @@
+# 1 "level/tesselator.h"
 #ifndef TESSELATOR_H
-#define TESSELATOR_H
+#define TESSELATOR_H 
 
 #include <stdbool.h>
 
@@ -10,7 +11,7 @@ typedef struct {
     float tex_coord_buffer[MAX_VERTICES * 2];
     float color_buffer[MAX_VERTICES * 3];
     int vertices;
-    
+
     float u, v;
     float r, g, b;
     bool has_color;

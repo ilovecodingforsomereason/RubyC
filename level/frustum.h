@@ -1,5 +1,6 @@
+# 1 "level/frustum.h"
 #ifndef FRUSTUM_H
-#define FRUSTUM_H
+#define FRUSTUM_H 
 
 #include "../phys/aabb.h"
 

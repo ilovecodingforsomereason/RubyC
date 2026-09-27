@@ -1,3 +1,4 @@
+# 1 "textures.c"
 #include "textures.h"
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +9,7 @@
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
-#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
 
 #ifdef __GNUC__

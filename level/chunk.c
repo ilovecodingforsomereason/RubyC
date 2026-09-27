@@ -1,3 +1,4 @@
+# 1 "level/chunk.c"
 #include "chunk.h"
 #include "level.h"
 #include "tile.h"
@@ -32,24 +33,28 @@ static void chunk_rebuild(Chunk* chunk, int layer) {
     glNewList(chunk->lists + layer, GL_COMPILE);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_terrain_texture);
-    
+
     tesselator_init(&g_chunk_tesselator);
-    
+
     for (int x = chunk->x0; x < chunk->x1; x++) {
         for (int y = chunk->y0; y < chunk->y1; y++) {
             for (int z = chunk->z0; z < chunk->z1; z++) {
                 if (level_is_tile(chunk->level, x, y, z)) {
-                    int tex = (y == (chunk->level->depth * 2 / 3)) ? 0 : 1;
-                    if (tex == 0) {
-                        tile_render(&tile_rock, &g_chunk_tesselator, chunk->level, layer, x, y, z);
-                    } else {
+                    int idx = (y * chunk->level->height + z) * chunk->level->width + x;
+                    int block_type = chunk->level->blocks[idx];
+
+                    if (block_type == 1) {
                         tile_render(&tile_grass, &g_chunk_tesselator, chunk->level, layer, x, y, z);
+                    } else if (block_type == 2) {
+                        tile_render(&tile_rock, &g_chunk_tesselator, chunk->level, layer, x, y, z);
+                    } else if (block_type == 3) {
+                        tile_render(&tile_dirt, &g_chunk_tesselator, chunk->level, layer, x, y, z);
                     }
                 }
             }
         }
     }
-    
+
     tesselator_flush(&g_chunk_tesselator);
     glDisable(GL_TEXTURE_2D);
     glEndList();

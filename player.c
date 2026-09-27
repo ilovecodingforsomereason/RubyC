@@ -1,3 +1,4 @@
+# 1 "player.c"
 #include "player.h"
 #include "level/level.h"
 #include <GLFW/glfw3.h>
@@ -46,7 +47,7 @@ void player_tick(Player* player, GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) ya++;
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) xa--;
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) xa++;
-    
+
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (player->on_ground) player->yd = 0.12f;
     }
@@ -54,7 +55,7 @@ void player_tick(Player* player, GLFWwindow* window) {
     player_move_relative(player, xa, ya, player->on_ground ? 0.02f : 0.005f);
     player->yd = (float)(player->yd - 0.005);
     player_move(player, player->xd, player->yd, player->zd);
-    
+
     player->xd *= 0.91f; player->yd *= 0.98f; player->zd *= 0.91f;
     if (player->on_ground) {
         player->xd *= 0.8f;

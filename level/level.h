@@ -1,5 +1,6 @@
+# 1 "level/level.h"
 #ifndef LEVEL_H
-#define LEVEL_H
+#define LEVEL_H 
 
 #include <stdbool.h>
 #include "../phys/aabb.h"
@@ -34,8 +35,8 @@ float level_get_brightness(Level* level, int x, int y, int z);
 void level_set_tile(Level* level, int x, int y, int z, int type);
 
 
-static inline float level_get_width(Level* l)  { return (float)l->width; }
+static inline float level_get_width(Level* l) { return (float)l->width; }
 static inline float level_get_height(Level* l) { return (float)l->height; }
-static inline float level_get_depth(Level* l)  { return (float)l->depth; }
+static inline float level_get_depth(Level* l) { return (float)l->depth; }
 
 #endif
